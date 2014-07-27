@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="soft_grey_select_top">#e0dddd</color>
+    <color name="soft_grey_split">#d0d0d0</color>
+    <color name="soft_grey">#777</color>
+    <color name="soft_grey_choose">#aaa</color>
+    <color name="aa">#ff007de3</color>
+
+    <!-- Shadow -->
+    <color name="zeroth_shadow">#00CCCCCC</color>
+    <color name="first_shadow">#10CCCCCC</color>
+    <color name="second_shadow">#20CCCCCC</color>
+    <color name="third_shadow">#30CCCCCC</color>
+    <color name="fourth_shadow">#50CCCCCC</color>
+
+    <!--  -->
+    <color name="pressed_example">#CC33B5E5</color>
+
+</resources>

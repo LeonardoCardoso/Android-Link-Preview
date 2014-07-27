@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Variation on the Holo Light theme that styles the Action Bar -->
+    <style name="App.Theme" parent="Theme.AppCompat.Light">
+        <item name="popupMenuStyle">@style/MyPopupMenu</item>
+        <item name="android:dropDownListViewStyle">@style/MyDropDownListView</item>
+        <item name="actionBarTabStyle">@style/MyActionBarTabStyle</item>
+        <item name="actionDropDownStyle">@style/MyDropDownNav</item>
+        <item name="actionBarStyle">@style/MyActionBarStyle</item>
+        <item name="actionOverflowButtonStyle">@style/MyOverflowButton</item>
+        <item name="actionMenuTextColor">@android:color/white</item>
+    </style>
+
+    <style name="App.ThemeMainWhite" parent="App.Theme">
+        <item name="homeAsUpIndicator">@drawable/abc_ic_ab_back_holo_dark</item>
+        <item name="actionMenuTextColor">@android:color/white</item>
+        <item name="dividerVertical">@drawable/divider_vertical_dark</item>
+    </style>
+
+    <style name="CustomTabPageIndicator.Text" parent="android:TextAppearance.Medium">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:paddingLeft">18dp</item>
+        <item name="android:paddingRight">18dp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">#000000</item>
+    </style>
+
+    <style name="MyOverflowButton" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:src">@drawable/overflow_icon</item>
+    </style>
+
+    <style name="MyActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="background">@drawable/p_background</item>
+        <item name="android:background">@drawable/p_background</item>
+        <item name="titleTextStyle">@style/MyTheme.ActionBar.TitleTextStyle</item>
+        <item name="subtitleTextStyle">@style/MyTheme.ActionBar.SubtitleTextStyle</item>
+    </style>
+
+    <style name="MyTheme.ActionBar.TitleTextStyle" parent="android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="MyTheme.ActionBar.SubtitleTextStyle" parent="android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <!-- style the overflow menu -->
+    <style name="MyPopupMenu" parent="Widget.AppCompat.Light.PopupMenu">
+        <item name="android:popupBackground">@drawable/drop_down</item>
+    </style>
+
+    <!-- style the items within the overflow menu -->
+    <style name="MyDropDownListView" parent="Widget.AppCompat.Light.ListView.DropDown"></style>
+
+    <!-- style for the tabs -->
+    <style name="MyActionBarTabStyle" parent="Widget.AppCompat.Light.ActionBar.TabBar"></style>
+
+    <!-- style the list navigation -->
+    <style name="MyDropDownNav" parent="Widget.AppCompat.Spinner.DropDown.ActionBar">
+        <item name="android:textSize">22sp</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:popupBackground">@drawable/drop_down</item>
+    </style>
+
+    <style name="Button">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+</resources>

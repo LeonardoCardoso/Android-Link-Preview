@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">LeoCardz Link Preview</string>
+    <string name="empty" translatable="false" />
+    <string name="insert_url">Insert a text containing an url</string>
+    <string name="restart">Restart</string>
+    <string name="about">About</string>
+    <string name="preview_area">Preview Area</string>
+    <string name="post_area">Post Area</string>
+    <string name="no_urls">No urls has been found</string>
+    <string name="failed_preview">Preview failed.\nClick to dismiss.</string>
+    <string name="submit">Submit</string>
+    <string name="random">Random</string>
+    <string name="post">Post</string>
+    <string name="previous">←</string>
+    <string name="forward">→</string>
+    <string name="choose_thumbnail">Choose a thumbnail</string>
+    <string name="no_thumbnail">No thumbnail</string>
+    <string name="enter_title">Enter a title</string>
+    <string name="enter_description">Enter a description</string>
+    <string name="of">of</string>
+    <string name="title_activity_about">About</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+
+</resources>
