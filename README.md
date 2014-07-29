@@ -14,6 +14,23 @@ In this project, I have added some libs.
 Note - Required Libs: [jsoup](http://jsoup.org/ "jsoup") is a smart lib to crawl the htlm code. [UrlImageViewHelper](https://github.com/koush/UrlImageViewHelper "UrlImageViewHelper") is an optimized lib for url images.
 
 
+## How to use with Gradle
+
+Simply add the repository to your build.gradle file:
+```groovy
+repositories {
+	jcenter()
+	maven { url 'https://github.com/leonardocardoso/mvn-repo/raw/master/maven-deploy' }
+}
+```
+
+And you can use the artifacts like this:
+```groovy
+dependencies {
+	compile 'com.leocardz:link-preview:1.1@aar'
+	// ...
+}
+```
 
 Apps using Android Link Preview
 =================================
