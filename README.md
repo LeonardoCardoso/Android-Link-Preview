@@ -1,6 +1,8 @@
 LeoCardz Link Preview for Android
 =================================
 
+Developed by <a href='https://github.com/LeonardoCardoso' target='_blank'>@LeonardoCardoso</a>. 
+
 This a version for Android of my web [Facebook Link Preview](http://lab.leocardz.com/facebook-link-preview-php--jquery/ "Facebook Link Preview").
 
 It makes a preview from an url, grabbing all informations. Such as title, relevant texts and images.
