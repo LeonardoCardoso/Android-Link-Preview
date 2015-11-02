@@ -13,7 +13,7 @@ For a sample app, please install it from [Android Link Preview on Google Play](h
 
 In this project, I have added some libs.
 
-Note - Required Libs: [jsoup](http://jsoup.org/ "jsoup") is a smart lib to crawl the htlm code. [UrlImageViewHelper](https://github.com/koush/UrlImageViewHelper "UrlImageViewHelper") is an optimized lib for url images.
+Note - Required Libs: [jsoup](http://jsoup.org/ "jsoup") is a smart lib to get the htlm code.
 
 
 ## How to use with Gradle
@@ -29,7 +29,8 @@ repositories {
 And you can use the artifacts like this:
 ```groovy
 dependencies {
-	compile 'com.leocardz:link-preview:1.1@aar'
+    compile 'org.jsoup:jsoup:1.8.3' // required
+	compile 'com.leocardz:link-preview:1.2@aar'
 	// ...
 }
 ```
@@ -38,9 +39,7 @@ Apps using Android Link Preview
 =================================
 1. [Unshorten It](https://play.google.com/store/apps/details?id=com.leocardz.url.unshortener&feature=search_result "Unshorten It")
 
-2. [Webbox](https://play.google.com/store/apps/details?id=com.leocardz.webbox&feature=search_result "Webbox")
-
-3. ...
+2. ...
 
 
 Contact

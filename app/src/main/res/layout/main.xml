@@ -29,7 +29,6 @@
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="6"
-                android:background="@drawable/abc_textfield_search_default_holo_light"
                 android:gravity="center_horizontal|left"
                 android:hint="@string/insert_url"
                 android:padding="10dp"

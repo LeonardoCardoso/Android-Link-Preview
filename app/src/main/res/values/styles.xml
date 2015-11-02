@@ -3,19 +3,18 @@
 
     <!-- Variation on the Holo Light theme that styles the Action Bar -->
     <style name="App.Theme" parent="Theme.AppCompat.Light">
-        <item name="popupMenuStyle">@style/MyPopupMenu</item>
+        <item name="android:popupMenuStyle">@style/MyPopupMenu</item>
         <item name="android:dropDownListViewStyle">@style/MyDropDownListView</item>
-        <item name="actionBarTabStyle">@style/MyActionBarTabStyle</item>
-        <item name="actionDropDownStyle">@style/MyDropDownNav</item>
-        <item name="actionBarStyle">@style/MyActionBarStyle</item>
-        <item name="actionOverflowButtonStyle">@style/MyOverflowButton</item>
-        <item name="actionMenuTextColor">@android:color/white</item>
+        <item name="android:actionBarTabStyle">@style/MyActionBarTabStyle</item>
+        <item name="android:actionDropDownStyle">@style/MyDropDownNav</item>
+        <item name="android:actionBarStyle">@style/MyActionBarStyle</item>
+        <item name="android:actionOverflowButtonStyle">@style/MyOverflowButton</item>
+        <item name="android:actionMenuTextColor">@android:color/white</item>
     </style>
 
     <style name="App.ThemeMainWhite" parent="App.Theme">
-        <item name="homeAsUpIndicator">@drawable/abc_ic_ab_back_holo_dark</item>
-        <item name="actionMenuTextColor">@android:color/white</item>
-        <item name="dividerVertical">@drawable/divider_vertical_dark</item>
+        <item name="android:actionMenuTextColor">@android:color/white</item>
+        <item name="android:dividerVertical">@drawable/divider_vertical_dark</item>
     </style>
 
     <style name="CustomTabPageIndicator.Text" parent="android:TextAppearance.Medium">
@@ -30,12 +29,16 @@
         <item name="android:src">@drawable/overflow_icon</item>
     </style>
 
+    <style name="MyActionBarTabStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:titleTextStyle">@style/MyTheme.ActionBar.TitleTextStyle</item>
+        <item name="android:subtitleTextStyle">@style/MyTheme.ActionBar.SubtitleTextStyle</item>
+    </style>
+
     <style name="MyActionBarStyle" parent="Widget.AppCompat.ActionBar">
-        <item name="background">@drawable/p_background</item>
-        <item name="android:background">@drawable/p_background</item>
         <item name="titleTextStyle">@style/MyTheme.ActionBar.TitleTextStyle</item>
         <item name="subtitleTextStyle">@style/MyTheme.ActionBar.SubtitleTextStyle</item>
     </style>
+
 
     <style name="MyTheme.ActionBar.TitleTextStyle" parent="android:style/TextAppearance.Holo.Widget.ActionBar.Title">
         <item name="android:textColor">@android:color/white</item>
@@ -54,9 +57,6 @@
 
     <!-- style the items within the overflow menu -->
     <style name="MyDropDownListView" parent="Widget.AppCompat.Light.ListView.DropDown"></style>
-
-    <!-- style for the tabs -->
-    <style name="MyActionBarTabStyle" parent="Widget.AppCompat.Light.ActionBar.TabBar"></style>
 
     <!-- style the list navigation -->
     <style name="MyDropDownNav" parent="Widget.AppCompat.Spinner.DropDown.ActionBar">
