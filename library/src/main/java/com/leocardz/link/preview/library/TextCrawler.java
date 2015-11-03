@@ -1,5 +1,12 @@
 package com.leocardz.link.preview.library;
 
+import android.os.AsyncTask;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -7,11 +14,6 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-
-import android.os.AsyncTask;
 
 public class TextCrawler {
 
@@ -32,7 +34,7 @@ public class TextCrawler {
 	}
 
 	public void makePreview(LinkPreviewCallback callback, String url,
-			int imageQuantity) {
+							int imageQuantity) {
 		this.callback = callback;
 		new GetCode(imageQuantity).execute(url);
 	}
@@ -125,9 +127,7 @@ public class TextCrawler {
 								sourceContent.getImages().add(
 										metaTags.get("image"));
 							else {
-								sourceContent.setImages(getImages(
-										sourceContent.getHtmlCode(),
-										sourceContent.getFinalUrl(),
+								sourceContent.setImages(getImages(doc,
 										imageQuantity));
 							}
 						}
@@ -188,92 +188,21 @@ public class TextCrawler {
 	}
 
 	/** Gets images from the html code */
-	public List<String> getImages(String content, String url, int imageQuantity) {
-
-		List<String> firstMatches = Regex.pregMatchAllImages(content,
-				Regex.IMAGE_TAG_PATTERN);
-
-		int pathCounter = 0;
-		String src = "", imageSrc = "", currentImage = "";
-
+	public List<String> getImages(Document document, int imageQuantity) {
 		List<String> matches = new ArrayList<String>();
-		for (String string : firstMatches) {
-			if (!string.contains(">") && !string.contains("<")
-					&& !string.contains("'") && !string.contains("\"")
-					&& !string.contains("{") && !string.contains("}")
-					&& !string.contains("[") && !string.contains("]"))
-				matches.add(string);
-		}
 
-		for (int i = 0; i < matches.size(); i++) {
+		Elements media = document.select("[src]");
 
-			currentImage = matches.get(i);
-
-			if (!currentImage.startsWith("http://")
-					&& !currentImage.startsWith("https://")) {
-
-				pathCounter = substringCount(currentImage, "\\.\\./");
-
-				imageSrc = cannonicalImgSrc(currentImage);
-
-				src = getImageUrl(pathCounter, cannonicalLink(imageSrc, url));
-
-				if (!(src + imageSrc).equals(url)) {
-					if (src.equals(""))
-						currentImage = src + imageSrc;
-					else
-						currentImage = src;
-				}
-
-				matches.set(i, currentImage);
+		for (Element srcElement : media) {
+			if (srcElement.tagName().equals("img")) {
+				matches.add(srcElement.attr("abs:src"));
 			}
-
 		}
 
 		if (imageQuantity != ALL)
 			matches = matches.subList(0, imageQuantity);
 
 		return matches;
-	}
-
-	/** Counts substring occurences */
-	private int substringCount(String haystack, String needle) {
-		return haystack.split(needle).length - 1;
-	}
-
-	/** Returns the original image url */
-	private String getImageUrl(int pathCounter, String url) {
-		String src = "";
-		if (pathCounter > 0) {
-			String[] urlBreaker = url.split("/");
-			for (int j = 0; j < pathCounter + 1; j++) {
-				src += urlBreaker[j] + "/";
-			}
-		} else {
-			src = url;
-		}
-		return src;
-	}
-
-	/** Returns the cannoncial image link */
-	private String cannonicalLink(String imagePath, String referer) {
-
-		if (imagePath.startsWith("//"))
-			imagePath = "http:" + imagePath;
-		else if (imagePath.startsWith("/"))
-			imagePath = "http://" + cannonicalPage(referer) + imagePath;
-		else
-			imagePath = referer + "/" + imagePath;
-
-		return imagePath;
-	}
-
-	/** Returns the cannoncial image url */
-	private String cannonicalImgSrc(String imagePath) {
-		imagePath = imagePath.replaceAll("\\.\\./", "");
-		imagePath = imagePath.replaceAll("\\./", "");
-		imagePath = imagePath.replaceAll(" ", "%20");
-		return imagePath;
 	}
 
 	/** Transforms from html to normal string */
@@ -368,7 +297,7 @@ public class TextCrawler {
 			else if (match.toLowerCase()
 					.contains("property=\"og:description\"")
 					|| match.toLowerCase()
-							.contains("property='og:description'")
+					.contains("property='og:description'")
 					|| match.toLowerCase().contains("name=\"description\"")
 					|| match.toLowerCase().contains("name='description'"))
 				metaTags.put("description", separeMetaTagsContent(match));
