@@ -3,6 +3,8 @@ LeoCardz Link Preview for Android
 
 Developed by <a href='https://github.com/LeonardoCardoso' target='_blank'>@LeonardoCardoso</a>. 
 
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Android--Link--Preview-green.svg?style=true)](https://android-arsenal.com/details/1/2755)
+
 This a version for Android of my web [Facebook Link Preview](http://lab.leocardz.com/facebook-link-preview-php--jquery/ "Facebook Link Preview").
 
 It makes a preview from an url, grabbing all informations. Such as title, relevant texts and images.
