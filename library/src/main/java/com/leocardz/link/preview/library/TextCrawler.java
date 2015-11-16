@@ -152,11 +152,9 @@ public class TextCrawler {
 
 		/** Verifies if the content could not be retrieved */
 		public boolean isNull() {
-			if (!sourceContent.isSuccess()
-					&& extendedTrim(sourceContent.getHtmlCode()).equals("")
-					&& !isImage(sourceContent.getFinalUrl()))
-				return true;
-			return false;
+			return !sourceContent.isSuccess() && 
+				extendedTrim(sourceContent.getHtmlCode()).equals("") && 
+				!isImage(sourceContent.getFinalUrl());
 		}
 
 	}
@@ -168,8 +166,9 @@ public class TextCrawler {
 		String result = "", currentMatch = "";
 
 		List<String> matches = Regex.pregMatchAll(content, pattern, 2);
-
-		for (int i = 0; i < matches.size(); i++) {
+		
+		int matchesSize = matches.size();
+		for (int i = 0; i < matchesSize; i++) {
 			currentMatch = stripTags(matches.get(i));
 			if (currentMatch.length() >= 120) {
 				result = extendedTrim(currentMatch);
@@ -245,7 +244,8 @@ public class TextCrawler {
 			url = url.substring(HTTPS_PROTOCOL.length());
 		}
 
-		for (int i = 0; i < url.length(); i++) {
+		int urlLength = url.length();
+		for (int i = 0; i < urlLength; i++) {
 			if (url.charAt(i) != '/')
 				cannonical += url.charAt(i);
 			else
@@ -263,10 +263,7 @@ public class TextCrawler {
 
 	/** Verifies if the url is an image */
 	private boolean isImage(String url) {
-		if (url.matches(Regex.IMAGE_PATTERN))
-			return true;
-		else
-			return false;
+		return url.matches(Regex.IMAGE_PATTERN);
 	}
 
 	/**
