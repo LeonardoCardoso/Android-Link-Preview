@@ -281,31 +281,38 @@ public class TextCrawler {
 				Regex.METATAG_PATTERN, 1);
 
 		for (String match : matches) {
-			if (match.toLowerCase().contains("property=\"og:url\"")
-					|| match.toLowerCase().contains("property='og:url'")
-					|| match.toLowerCase().contains("name=\"url\"")
-					|| match.toLowerCase().contains("name='url'"))
-				metaTags.put("url", separeMetaTagsContent(match));
-			else if (match.toLowerCase().contains("property=\"og:title\"")
-					|| match.toLowerCase().contains("property='og:title'")
-					|| match.toLowerCase().contains("name=\"title\"")
-					|| match.toLowerCase().contains("name='title'"))
-				metaTags.put("title", separeMetaTagsContent(match));
-			else if (match.toLowerCase()
+			final String lowerCase = match.toLowerCase();
+			if (lowerCase.contains("property=\"og:url\"")
+					|| lowerCase.contains("property='og:url'")
+					|| lowerCase.contains("name=\"url\"")
+					|| lowerCase.contains("name='url'"))
+				updateMetaTag(metaTags, "url", separeMetaTagsContent(match));
+			else if (lowerCase.contains("property=\"og:title\"")
+					|| lowerCase.contains("property='og:title'")
+					|| lowerCase.contains("name=\"title\"")
+					|| lowerCase.contains("name='title'"))
+				updateMetaTag(metaTags, "title", separeMetaTagsContent(match));
+			else if (lowerCase
 					.contains("property=\"og:description\"")
-					|| match.toLowerCase()
+					|| lowerCase
 					.contains("property='og:description'")
-					|| match.toLowerCase().contains("name=\"description\"")
-					|| match.toLowerCase().contains("name='description'"))
-				metaTags.put("description", separeMetaTagsContent(match));
-			else if (match.toLowerCase().contains("property=\"og:image\"")
-					|| match.toLowerCase().contains("property='og:image'")
-					|| match.toLowerCase().contains("name=\"image\"")
-					|| match.toLowerCase().contains("name='image'"))
-				metaTags.put("image", separeMetaTagsContent(match));
+					|| lowerCase.contains("name=\"description\"")
+					|| lowerCase.contains("name='description'"))
+				updateMetaTag(metaTags, "description", separeMetaTagsContent(match));
+			else if (lowerCase.contains("property=\"og:image\"")
+					|| lowerCase.contains("property='og:image'")
+					|| lowerCase.contains("name=\"image\"")
+					|| lowerCase.contains("name='image'"))
+				updateMetaTag(metaTags, "image", separeMetaTagsContent(match));
 		}
 
 		return metaTags;
+	}
+
+	private void updateMetaTag(HashMap<String, String> metaTags, String url, String value) {
+		if (value != null && (value.length() > 0)) {
+			metaTags.put(url, value);
+		}
 	}
 
 	/** Gets content from metatag */
