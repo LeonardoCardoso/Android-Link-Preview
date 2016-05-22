@@ -1,8 +1,6 @@
 LeoCardz Link Preview for Android
 =================================
 
-Developed by <a href='https://github.com/LeonardoCardoso' target='_blank'>@LeonardoCardoso</a>. 
-
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Android--Link--Preview-green.svg?style=true)](https://android-arsenal.com/details/1/2755)
 
 This a version for Android of my web [Facebook Link Preview](http://lab.leocardz.com/facebook-link-preview-php--jquery/ "Facebook Link Preview").
@@ -10,8 +8,6 @@ This a version for Android of my web [Facebook Link Preview](http://lab.leocardz
 It makes a preview from an url, grabbing all informations. Such as title, relevant texts and images.
 
 ![Preview](http://i.imgur.com/VSejRyV.gif)
-
-For more information about this, please access [Android Link Preview](http://android.leocardz.com/android-link-preview/ "Android Link Preview").
 
 For a sample app, please install it from [Android Link Preview on Google Play](https://play.google.com/store/apps/details?id=com.leocardz.link.preview&feature=search_result "Android Link Preview on Google Play").
 
@@ -44,9 +40,14 @@ Apps using Android Link Preview
 2. ...
 
 
-Contact
-=================================
-If you are using this lib, let me know contacting me at android@leocardz.com then I add your app here in a list
+Information and Contact
+===
+
+Developed by [@LeonardoCardoso](https://github.com/LeonardoCardoso). 
+
+For more information, please visit [http://android.leocardz.com/android-link-preview/](http://android.leocardz.com/android-link-preview/).
+
+Contact me either by Twitter [@leocardz](https://twitter.com/leocardz) or emailing me to [contact@leocardz.com](mailto:contact@leocardz.com?subject=Scroll%20Indicator).
 
 
 License
