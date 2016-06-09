@@ -5,7 +5,7 @@ LeoCardz Link Preview for Android
 
 This a version for Android of my web [Facebook Link Preview](http://lab.leocardz.com/link-preview/ "Link Preview").
 
-It makes a preview from an url, grabbing all informations such as title, relevant texts and images.
+It makes a preview from an url, grabbing all the information such as title, relevant texts and images.
 
 ![Preview](http://i.imgur.com/VSejRyV.gif)
 
