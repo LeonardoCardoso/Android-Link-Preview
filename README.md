@@ -3,8 +3,6 @@ LeoCardz Link Preview for Android
 
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Android--Link--Preview-green.svg?style=true)](https://android-arsenal.com/details/1/2755)
 
-This a version for Android of my web [Facebook Link Preview](http://lab.leocardz.com/link-preview/ "Link Preview").
-
 It makes a preview from an url, grabbing all the information such as title, relevant texts and images.
 
 ![Preview](http://i.imgur.com/VSejRyV.gif)
@@ -49,6 +47,11 @@ For more information, please visit [http://android.leocardz.com/android-link-pre
 
 Contact me either by Twitter [@leocardz](https://twitter.com/leocardz) or emailing me to [contact@leocardz.com](mailto:contact@leocardz.com).
 
+Related Projects
+===
+
+* [Swift Link Preview](https://github.com/LeonardoCardoso/Swift-Link-Preview)
+* [Link Preview (PHP + Angular + Bootstrap)](https://github.com/LeonardoCardoso/Link-Preview)
 
 License
 =================================
