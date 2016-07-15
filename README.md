@@ -5,7 +5,7 @@ LeoCardz Link Preview for Android
 
 It makes a preview from an url, grabbing all the information such as title, relevant texts and images.
 
-![Preview](http://i.imgur.com/VSejRyV.gif)
+![Preview](images/VSejRyV.gif)
 
 For a sample app, please install it from [Android Link Preview on Google Play](https://play.google.com/store/apps/details?id=com.leocardz.link.preview&feature=search_result "Android Link Preview on Google Play").
 
