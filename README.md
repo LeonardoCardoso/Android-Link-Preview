@@ -43,8 +43,6 @@ Information and Contact
 
 Developed by [@LeonardoCardoso](https://github.com/LeonardoCardoso). 
 
-For more information, please visit [http://android.leocardz.com/android-link-preview/](http://android.leocardz.com/android-link-preview/).
-
 Contact me either by Twitter [@leocardz](https://twitter.com/leocardz) or emailing me to [contact@leocardz.com](mailto:contact@leocardz.com).
 
 Related Projects
