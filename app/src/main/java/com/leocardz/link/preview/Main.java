@@ -194,12 +194,14 @@ public class Main extends ActionBarActivity {
                     descriptionTextView.setVisibility(View.GONE);
 
                 urlTextView.setText(currentCannonicalUrl);
+                
+                final String currentUrlLocal = currentUrl;
 
                 mainView.setOnClickListener(new OnClickListener() {
 
                     @Override
                     public void onClick(View arg0) {
-                        String url = currentUrl;
+                        String url = currentUrlLocal;
                         Intent i = new Intent(Intent.ACTION_VIEW);
                         i.setData(Uri.parse(url));
                         startActivity(i);
