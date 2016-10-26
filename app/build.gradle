@@ -28,5 +28,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.koushikdutta.urlimageviewhelper:urlimageviewhelper:1.0.4'
     compile 'org.jsoup:jsoup:1.8.3'
-    compile 'com.leocardz:link-preview:1.2.1@aar'
+    compile 'com.leocardz:link-preview:1.2.2@aar'
 }
