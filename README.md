@@ -1,4 +1,4 @@
-]LeoCardz Link Preview for Android
+LeoCardz Link Preview for Android
 =================================
 
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Android--Link--Preview-green.svg?style=true)](https://android-arsenal.com/details/1/2755)
@@ -13,7 +13,7 @@ For a sample app, please install it from [Android Link Preview on Google Play](h
 
 
 ## Requriements
-* [jsoup](http://jsoup.org/ "jsoup") is a smart lib to get the htlm code.
+* [jsoup](http://jsoup.org/ "jsoup") is a smart lib to get the html code.
 
 
 ## Installation
