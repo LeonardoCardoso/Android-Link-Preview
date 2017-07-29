@@ -12,7 +12,7 @@ It makes a preview from an url, grabbing all the information such as title, rele
 For a sample app, please install it from [Android Link Preview on Google Play](https://play.google.com/store/apps/details?id=com.leocardz.link.preview&feature=search_result "Android Link Preview on Google Play").
 
 
-## Requriements
+## Requirements
 * [jsoup](http://jsoup.org/ "jsoup") is a smart lib to get the html code.
 
 
