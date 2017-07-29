@@ -5,14 +5,19 @@ LeoCardz Link Preview for Android
 
 It makes a preview from an url, grabbing all the information such as title, relevant texts and images.
 
+## Visual Examples
 ![Preview](images/VSejRyV.gif)
 
+## Sample App
 For a sample app, please install it from [Android Link Preview on Google Play](https://play.google.com/store/apps/details?id=com.leocardz.link.preview&feature=search_result "Android Link Preview on Google Play").
 
-Note - Required Libs: [jsoup](http://jsoup.org/ "jsoup") is a smart lib to get the htlm code.
+
+## Requriements
+* [jsoup](http://jsoup.org/ "jsoup") is a smart lib to get the html code.
 
 
-## How to use with Gradle
+## Installation
+### gradle
 
 Simply add the repository to your build.gradle file:
 ```groovy
@@ -29,6 +34,36 @@ dependencies {
 	compile 'com.leocardz:link-preview:1.2.2@aar'
 	// ...
 }
+```
+
+## Usage
+#### Instantiating 
+```java
+import com.leocardz.link.preview.library.TextCrawler;
+// ...
+// Create an instance of the TextCrawler to parse your url into a preview.
+TextCrawler textCrawler = new TextCrawler();
+
+// ..
+
+// Create the callbacks to handle pre and post exicution of the preview generation.
+LinkPreviewCallback linkPreviewCallback = new LinkPreviewCallback() {
+    @Override
+    public void onPre() {
+        // Any work that needs to be done before generating the preview. Usually inflate 
+        // your custom preview layout here.
+    }
+
+    @Override
+    public void onPos(SourceContent sourceContent, boolean b) {
+        // Populate your preview layout with the results of sourceContent.
+    }
+};
+```
+
+#### Generate Preview
+```java
+textCrawler.makePreview( linkPreviewCallback, url);
 ```
 
 Apps using Android Link Preview
