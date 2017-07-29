@@ -31,18 +31,20 @@ public class TextCrawler {
 	}
 
 	public void makePreview(LinkPreviewCallback callback, String url) {
-		this.callback = callback;
-		getCodeTask = new GetCode(ALL).execute(url);
+		makePreview(callback, url, ALL);
 	}
 
 	public void makePreview(LinkPreviewCallback callback, String url,
 							int imageQuantity) {
 		this.callback = callback;
+		cancel();
 		getCodeTask = new GetCode(imageQuantity).execute(url);
 	}
 
 	public void cancel(){
-		getCodeTask.cancel(true);
+		if(getCodeTask != null){
+			getCodeTask.cancel(true);
+		}
 	}
 
 
