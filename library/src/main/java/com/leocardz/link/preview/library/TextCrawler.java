@@ -25,19 +25,28 @@ public class TextCrawler {
 
 	private LinkPreviewCallback callback;
 
+	private AsyncTask getCodeTask;
+
 	public TextCrawler() {
 	}
 
 	public void makePreview(LinkPreviewCallback callback, String url) {
-		this.callback = callback;
-		new GetCode(ALL).execute(url);
+		makePreview(callback, url, ALL);
 	}
 
 	public void makePreview(LinkPreviewCallback callback, String url,
 							int imageQuantity) {
 		this.callback = callback;
-		new GetCode(imageQuantity).execute(url);
+		cancel();
+		getCodeTask = new GetCode(imageQuantity).execute(url);
 	}
+
+	public void cancel(){
+		if(getCodeTask != null){
+			getCodeTask.cancel(true);
+		}
+	}
+
 
 	/** Get html code */
 	public class GetCode extends AsyncTask<String, Void, Void> {
@@ -64,6 +73,11 @@ public class TextCrawler {
 				callback.onPos(sourceContent, isNull());
 			}
 			super.onPostExecute(result);
+		}
+
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
 		}
 
 		@Override
@@ -169,6 +183,9 @@ public class TextCrawler {
 		
 		int matchesSize = matches.size();
 		for (int i = 0; i < matchesSize; i++) {
+			if(getCodeTask.isCancelled()){
+				break;
+			}
 			currentMatch = stripTags(matches.get(i));
 			if (currentMatch.length() >= 120) {
 				result = extendedTrim(currentMatch);
@@ -193,6 +210,9 @@ public class TextCrawler {
 		Elements media = document.select("[src]");
 
 		for (Element srcElement : media) {
+			if(getCodeTask.isCancelled()){
+				break;
+			}
 			if (srcElement.tagName().equals("img")) {
 				matches.add(srcElement.attr("abs:src"));
 			}
@@ -246,6 +266,9 @@ public class TextCrawler {
 
 		int urlLength = url.length();
 		for (int i = 0; i < urlLength; i++) {
+			if(getCodeTask.isCancelled()){
+				break;
+			}
 			if (url.charAt(i) != '/')
 				cannonical += url.charAt(i);
 			else
@@ -281,6 +304,9 @@ public class TextCrawler {
 				Regex.METATAG_PATTERN, 1);
 
 		for (String match : matches) {
+			if(getCodeTask.isCancelled()){
+				break;
+			}
 			final String lowerCase = match.toLowerCase();
 			if (lowerCase.contains("property=\"og:url\"")
 					|| lowerCase.contains("property='og:url'")
