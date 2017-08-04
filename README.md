@@ -36,6 +36,14 @@ dependencies {
 }
 ```
 
+### ProGuard
+If you use ProGuard, it is advised that you keep the jsoup dependencies  by adding 
+```groovy
+-keeppackagenames org.jsoup.nodes
+```
+to your ProGuard rules file.
+
+
 ## Usage
 #### Instantiating 
 ```java
@@ -64,6 +72,16 @@ LinkPreviewCallback linkPreviewCallback = new LinkPreviewCallback() {
 #### Generate Preview
 ```java
 textCrawler.makePreview( linkPreviewCallback, url);
+```
+#### Cancel unfinished tasks when views are destroied.
+If you are using Android Link Preview inside of an Activity, it is important to cancel unfinished Preview activites at the end of the Activity's lifecycle.
+
+```java
+ @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        textCrawler.cancel();
+    }
 ```
 
 Apps using Android Link Preview
