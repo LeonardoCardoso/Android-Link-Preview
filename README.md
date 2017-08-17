@@ -31,7 +31,7 @@ And you can use the artifacts like this:
 ```groovy
 dependencies {
     compile 'org.jsoup:jsoup:1.8.3' // required
-	compile 'com.leocardz:link-preview:1.2.2@aar'
+	compile 'com.leocardz:link-preview:2.0.0@aar'
 	// ...
 }
 ```
