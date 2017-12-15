@@ -5,10 +5,12 @@ android {
     buildToolsVersion '25.0.0'
 
     defaultConfig {
-        minSdkVersion 7
+        minSdkVersion 9
         targetSdkVersion 23
         versionCode 1
         versionName "1.2.2"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -21,4 +23,7 @@ android {
 
 dependencies {
     compile 'org.jsoup:jsoup:1.10.3'
+
+    androidTestCompile 'junit:junit:4.12'
+    androidTestCompile 'com.android.support.test:runner:1.0.1'
 }
