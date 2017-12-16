@@ -38,7 +38,11 @@ public class TextCrawler {
 							int imageQuantity) {
 		this.callback = callback;
 		cancel();
-		getCodeTask = new GetCode(imageQuantity).execute(url);
+		getCodeTask = createPreviewGenerator(imageQuantity).execute(url);
+	}
+
+	protected GetCode createPreviewGenerator(int imageQuantity) {
+		return new GetCode(imageQuantity);
 	}
 
 	public void cancel(){
@@ -103,9 +107,7 @@ public class TextCrawler {
 
 				} else {
 					try {
-						Document doc = Jsoup
-								.connect(sourceContent.getFinalUrl())
-								.userAgent("Mozilla").get();
+						Document doc = getDocument();
 
 						sourceContent.setHtmlCode(extendedTrim(doc.toString()));
 
@@ -147,7 +149,7 @@ public class TextCrawler {
 						}
 
 						sourceContent.setSuccess(true);
-					} catch (Exception e) {
+					} catch (Throwable t) {
 						sourceContent.setSuccess(false);
 					}
 				}
@@ -164,10 +166,14 @@ public class TextCrawler {
 			return null;
 		}
 
+		protected Document getDocument() throws IOException {
+			return Jsoup.connect(sourceContent.getFinalUrl()).userAgent("Mozilla").get();
+		}
+
 		/** Verifies if the content could not be retrieved */
 		public boolean isNull() {
-			return !sourceContent.isSuccess() && 
-				extendedTrim(sourceContent.getHtmlCode()).equals("") && 
+			return !sourceContent.isSuccess() &&
+				extendedTrim(sourceContent.getHtmlCode()).equals("") &&
 				!isImage(sourceContent.getFinalUrl());
 		}
 
@@ -180,7 +186,7 @@ public class TextCrawler {
 		String result = "", currentMatch = "";
 
 		List<String> matches = Regex.pregMatchAll(content, pattern, 2);
-		
+
 		int matchesSize = matches.size();
 		for (int i = 0; i < matchesSize; i++) {
 			if(getCodeTask.isCancelled()){
