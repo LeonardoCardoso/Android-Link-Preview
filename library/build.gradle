@@ -2,7 +2,6 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion '25.0.0'
 
     defaultConfig {
         minSdkVersion 9
@@ -22,8 +21,8 @@ android {
 }
 
 dependencies {
-    compile 'org.jsoup:jsoup:1.10.3'
+    implementation 'org.jsoup:jsoup:1.11.3'
 
-    androidTestCompile 'junit:junit:4.12'
-    androidTestCompile 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
 }
