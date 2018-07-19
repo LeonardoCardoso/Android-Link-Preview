@@ -38,8 +38,8 @@ public class TextCrawlerTest {
     private class JSoupFailingTextCrawler extends TextCrawler {
 
         @Override
-        protected GetCode createPreviewGenerator(int imageQuantity) {
-            return new GetCode(imageQuantity) {
+        protected GetCode createPreviewGenerator(ImagePickingStrategy imagePickingStrategy) {
+            return new GetCode(imagePickingStrategy) {
 
                 @Override
                 protected Document getDocument() throws IOException {
@@ -49,26 +49,4 @@ public class TextCrawlerTest {
         }
     }
 
-    private class TestLinkPreviewCallback implements LinkPreviewCallback {
-        SourceContent sourceContent;
-        boolean isNull;
-        final CountDownLatch signal;
-
-        public TestLinkPreviewCallback(CountDownLatch signal) {
-            super();
-            this.signal = signal;
-        }
-
-        @Override
-        public void onPre() {
-
-        }
-
-        @Override
-        public void onPos(SourceContent sourceContent, boolean isNull) {
-            this.sourceContent = sourceContent;
-            this.isNull = isNull;
-            signal.countDown();
-        }
-    }
 }

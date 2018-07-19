@@ -4,8 +4,6 @@ import android.os.AsyncTask;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -30,20 +28,28 @@ public class TextCrawler {
 	public TextCrawler() {
 	}
 
-	public void makePreview(LinkPreviewCallback callback, String url) {
-		makePreview(callback, url, ALL);
-	}
+    public void makePreview(LinkPreviewCallback callback, String url) {
+        ImagePickingStrategy imagePickingStrategy = new DefaultImagePickingStrategy();
 
-	public void makePreview(LinkPreviewCallback callback, String url,
-							int imageQuantity) {
-		this.callback = callback;
-		cancel();
-		getCodeTask = createPreviewGenerator(imageQuantity).execute(url);
-	}
+        makePreview(callback, url, imagePickingStrategy);
+    }
 
-	protected GetCode createPreviewGenerator(int imageQuantity) {
-		return new GetCode(imageQuantity);
-	}
+    public void makePreview(LinkPreviewCallback callback, String url,
+                            int imageQuantity) {
+        ImagePickingStrategy imagePickingStrategy = new DefaultImagePickingStrategy();
+        imagePickingStrategy.setImageQuantity(imageQuantity);
+        makePreview(callback, url, imagePickingStrategy);
+    }
+
+    public void makePreview(LinkPreviewCallback callback, String url, ImagePickingStrategy imagePickingStrategy) {
+        this.callback = callback;
+        cancel();
+        getCodeTask = createPreviewGenerator(imagePickingStrategy).execute(url);
+    }
+
+    protected GetCode createPreviewGenerator(ImagePickingStrategy imagePickingStrategy) {
+        return new GetCode(imagePickingStrategy);
+    }
 
 	public void cancel(){
 		if(getCodeTask != null){
@@ -52,123 +58,121 @@ public class TextCrawler {
 	}
 
 
-	/** Get html code */
-	public class GetCode extends AsyncTask<String, Void, Void> {
+    /**
+     * Get html code
+     */
+     class GetCode extends AsyncTask<String, Void, Void> {
 
-		private SourceContent sourceContent = new SourceContent();
-		private int imageQuantity;
-		private ArrayList<String> urls;
+        private SourceContent sourceContent = new SourceContent();
+        private final ImagePickingStrategy imagePickingStrategy;
+        private ArrayList<String> urls;
 
-		public GetCode(int imageQuantity) {
-			this.imageQuantity = imageQuantity;
-		}
+        GetCode(ImagePickingStrategy imagePickingStrategy) {
+            this.imagePickingStrategy = imagePickingStrategy;
+        }
 
-		@Override
-		protected void onPreExecute() {
-			if (callback != null) {
-				callback.onPre();
-			}
-			super.onPreExecute();
-		}
+        @Override
+        protected void onPreExecute() {
+            if (callback != null) {
+                callback.onPre();
+            }
+            super.onPreExecute();
+        }
 
-		@Override
-		protected void onPostExecute(Void result) {
-			if (callback != null) {
-				callback.onPos(sourceContent, isNull());
-			}
-			super.onPostExecute(result);
-		}
+        @Override
+        protected void onPostExecute(Void result) {
+            if (callback != null) {
+                callback.onPos(sourceContent, isNull());
+            }
+            super.onPostExecute(result);
+        }
 
-		@Override
-		protected void onCancelled() {
-			super.onCancelled();
-		}
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+        }
 
-		@Override
-		protected Void doInBackground(String... params) {
-			// Don't forget the http:// or https://
-			urls = SearchUrls.matches(params[0]);
+        @Override
+        protected Void doInBackground(String... params) {
+            // Don't forget the http:// or https://
+            urls = SearchUrls.matches(params[0]);
 
-			if (urls.size() > 0)
-				sourceContent
-						.setFinalUrl(unshortenUrl(extendedTrim(urls.get(0))));
-			else
-				sourceContent.setFinalUrl("");
+            if (urls.size() > 0)
+                sourceContent
+                        .setFinalUrl(unshortenUrl(extendedTrim(urls.get(0))));
+            else
+                sourceContent.setFinalUrl("");
 
-			if (!sourceContent.getFinalUrl().equals("")) {
-				if (isImage(sourceContent.getFinalUrl())
-						&& !sourceContent.getFinalUrl().contains("dropbox")) {
-					sourceContent.setSuccess(true);
+            if (!sourceContent.getFinalUrl().equals("")) {
+                if (isImage(sourceContent.getFinalUrl())
+                        && !sourceContent.getFinalUrl().contains("dropbox")) {
+                    sourceContent.setSuccess(true);
 
-					sourceContent.getImages().add(sourceContent.getFinalUrl());
+                    sourceContent.getImages().add(sourceContent.getFinalUrl());
 
-					sourceContent.setTitle("");
-					sourceContent.setDescription("");
+                    sourceContent.setTitle("");
+                    sourceContent.setDescription("");
 
-				} else {
-					try {
-						Document doc = getDocument();
+                } else {
+                    try {
+                        Document doc = getDocument();
 
-						sourceContent.setHtmlCode(extendedTrim(doc.toString()));
+                        sourceContent.setHtmlCode(extendedTrim(doc.toString()));
 
-						HashMap<String, String> metaTags = getMetaTags(sourceContent
-								.getHtmlCode());
+                        HashMap<String, String> metaTags = getMetaTags(sourceContent
+                                .getHtmlCode());
 
-						sourceContent.setMetaTags(metaTags);
+                        sourceContent.setMetaTags(metaTags);
 
-						sourceContent.setTitle(metaTags.get("title"));
-						sourceContent.setDescription(metaTags
-								.get("description"));
+                        sourceContent.setTitle(metaTags.get("title"));
+                        sourceContent.setDescription(metaTags
+                                .get("description"));
 
-						if (sourceContent.getTitle().equals("")) {
-							String matchTitle = Regex.pregMatch(
-									sourceContent.getHtmlCode(),
-									Regex.TITLE_PATTERN, 2);
+                        if (sourceContent.getTitle().equals("")) {
+                            String matchTitle = Regex.pregMatch(
+                                    sourceContent.getHtmlCode(),
+                                    Regex.TITLE_PATTERN, 2);
 
-							if (!matchTitle.equals(""))
-								sourceContent.setTitle(htmlDecode(matchTitle));
-						}
+                            if (!matchTitle.equals(""))
+                                sourceContent.setTitle(htmlDecode(matchTitle));
+                        }
 
-						if (sourceContent.getDescription().equals(""))
-							sourceContent
-									.setDescription(crawlCode(sourceContent
-											.getHtmlCode()));
+                        if (sourceContent.getDescription().equals(""))
+                            sourceContent
+                                    .setDescription(crawlCode(sourceContent
+                                            .getHtmlCode()));
 
-						sourceContent.setDescription(sourceContent
-								.getDescription().replaceAll(
-										Regex.SCRIPT_PATTERN, ""));
+                        sourceContent.setDescription(sourceContent
+                                .getDescription().replaceAll(
+                                        Regex.SCRIPT_PATTERN, ""));
 
-						if (imageQuantity != NONE) {
-							if (!metaTags.get("image").equals(""))
-								sourceContent.getImages().add(
-										metaTags.get("image"));
-							else {
-								sourceContent.setImages(getImages(doc,
-										imageQuantity));
-							}
-						}
+                        if (imagePickingStrategy.getImageQuantity() != NONE) {
+                            List<String> images;
+                            images = imagePickingStrategy.getImages(getCodeTask, doc, metaTags);
+                            sourceContent.setImages(images);
+                        }
 
-						sourceContent.setSuccess(true);
-					} catch (Throwable t) {
-						sourceContent.setSuccess(false);
-					}
-				}
-			}
+                        sourceContent.setSuccess(true);
+                    } catch (Throwable t) {
+                        sourceContent.setSuccess(false);
+                    }
+                }
+            }
 
-			String[] finalLinkSet = sourceContent.getFinalUrl().split("&");
-			sourceContent.setUrl(finalLinkSet[0]);
+            String[] finalLinkSet = sourceContent.getFinalUrl().split("&");
+            sourceContent.setUrl(finalLinkSet[0]);
 
-			sourceContent.setCannonicalUrl(cannonicalPage(sourceContent
-					.getFinalUrl()));
-			sourceContent.setDescription(stripTags(sourceContent
-					.getDescription()));
+            sourceContent.setCannonicalUrl(cannonicalPage(sourceContent
+                    .getFinalUrl()));
+            sourceContent.setDescription(stripTags(sourceContent
+                    .getDescription()));
 
-			return null;
-		}
+            return null;
+        }
 
-		protected Document getDocument() throws IOException {
-			return Jsoup.connect(sourceContent.getFinalUrl()).userAgent("Mozilla").get();
-		}
+        protected Document getDocument() throws IOException {
+            return Jsoup.connect(sourceContent.getFinalUrl()).userAgent("Mozilla").get();
+        }
 
 		/** Verifies if the content could not be retrieved */
 		public boolean isNull() {
@@ -207,27 +211,6 @@ public class TextCrawler {
 		result = result.replaceAll("&nbsp;", "");
 
 		return htmlDecode(result);
-	}
-
-	/** Gets images from the html code */
-	public List<String> getImages(Document document, int imageQuantity) {
-		List<String> matches = new ArrayList<String>();
-
-		Elements media = document.select("[src]");
-
-		for (Element srcElement : media) {
-			if(getCodeTask.isCancelled()){
-				break;
-			}
-			if (srcElement.tagName().equals("img")) {
-				matches.add(srcElement.attr("abs:src"));
-			}
-		}
-
-		if (imageQuantity != ALL)
-			matches = matches.subList(0, imageQuantity);
-
-		return matches;
 	}
 
 	/** Transforms from html to normal string */
