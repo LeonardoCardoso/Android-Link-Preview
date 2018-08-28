@@ -23,8 +23,8 @@ android {
 }
 
 dependencies {
+    implementation project(":library")
     implementation 'com.android.support:appcompat-v7:23.1.1'
     implementation 'com.koushikdutta.urlimageviewhelper:urlimageviewhelper:1.0.4'
     implementation 'org.jsoup:jsoup:1.11.3'
-    implementation 'com.leocardz:link-preview:2.0.0@aar'
 }
