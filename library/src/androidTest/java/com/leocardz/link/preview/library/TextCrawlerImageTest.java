@@ -178,4 +178,45 @@ public class TextCrawlerImageTest {
         assertEquals(1, images.size());
         assertEquals(expectedImageUrl, images.get(0));
     }
+
+
+    @Test
+    public void directLinkToImageThatEndsInFileExtensionReturnsImage() throws Throwable {
+        final String expectedImageUrl = "https://cdn.shopify.com/s/files/1/1400/5075/files/website_logo2_720x_6cdc3363-fec0-4d60-a5bd-5236869352bf_720x.png";
+
+        final TextCrawler textCrawler = new TextCrawler();
+        final CountDownLatch signal = new CountDownLatch(1);
+        final TestLinkPreviewCallback callback = new TestLinkPreviewCallback(signal);
+        textCrawler.makePreview(callback, expectedImageUrl);
+        signal.await();
+
+        final SourceContent sourceContent = callback.sourceContent;
+        assertNotNull(sourceContent);
+        assertTrue(sourceContent.isSuccess());
+        assertFalse(callback.isNull);
+        final List<String> images = sourceContent.getImages();
+        assertNotNull(images);
+        assertEquals(1, images.size());
+        assertEquals(expectedImageUrl, images.get(0));
+    }
+
+    @Test
+    public void directLinkToImageThatDoesNotEndInFileExtensionReturnsImage() throws Throwable {
+        final String expectedImageUrl = "https://cdn.shopify.com/s/files/1/1400/5075/files/website_logo2_720x_6cdc3363-fec0-4d60-a5bd-5236869352bf_720x.png?v=1533741874";
+
+        final TextCrawler textCrawler = new TextCrawler();
+        final CountDownLatch signal = new CountDownLatch(1);
+        final TestLinkPreviewCallback callback = new TestLinkPreviewCallback(signal);
+        textCrawler.makePreview(callback, expectedImageUrl);
+        signal.await();
+
+        final SourceContent sourceContent = callback.sourceContent;
+        assertNotNull(sourceContent);
+        assertTrue(sourceContent.isSuccess());
+        assertFalse(callback.isNull);
+        final List<String> images = sourceContent.getImages();
+        assertNotNull(images);
+        assertEquals(1, images.size());
+        assertEquals(expectedImageUrl, images.get(0));
+    }
 }

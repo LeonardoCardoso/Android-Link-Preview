@@ -3,6 +3,7 @@ package com.leocardz.link.preview.library;
 import android.os.AsyncTask;
 
 import org.jsoup.Jsoup;
+import org.jsoup.UnsupportedMimeTypeException;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
@@ -103,16 +104,12 @@ public class TextCrawler {
             else
                 sourceContent.setFinalUrl("");
 
+            boolean wasPreviewGenerationSuccessful = false;
             if (!sourceContent.getFinalUrl().equals("")) {
                 if (isImage(sourceContent.getFinalUrl())
                         && !sourceContent.getFinalUrl().contains("dropbox")) {
-                    sourceContent.setSuccess(true);
-
-                    sourceContent.getImages().add(sourceContent.getFinalUrl());
-
-                    sourceContent.setTitle("");
-                    sourceContent.setDescription("");
-
+                    setSourceContentForImage();
+                    wasPreviewGenerationSuccessful = true;
                 } else {
                     try {
                         Document doc = getDocument();
@@ -152,11 +149,18 @@ public class TextCrawler {
                             sourceContent.setImages(images);
                         }
 
-                        sourceContent.setSuccess(true);
+                        wasPreviewGenerationSuccessful = true;
                     } catch (Throwable t) {
-                        sourceContent.setSuccess(false);
+                        if (t instanceof UnsupportedMimeTypeException) {
+                            final String mimeType = ((UnsupportedMimeTypeException) t).getMimeType();
+                            if (mimeType != null && mimeType.startsWith("image")) {
+                                setSourceContentForImage();
+                                wasPreviewGenerationSuccessful = true;
+                            }
+                        }
                     }
                 }
+                sourceContent.setSuccess(wasPreviewGenerationSuccessful);
             }
 
             String[] finalLinkSet = sourceContent.getFinalUrl().split("&");
@@ -168,6 +172,16 @@ public class TextCrawler {
                     .getDescription()));
 
             return null;
+        }
+
+        /**
+         * Configures the sourceContent for an Image.
+         */
+        private void setSourceContentForImage() {
+            sourceContent.getImages().add(sourceContent.getFinalUrl());
+
+            sourceContent.setTitle("");
+            sourceContent.setDescription("");
         }
 
         protected Document getDocument() throws IOException {
