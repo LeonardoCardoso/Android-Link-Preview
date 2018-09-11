@@ -2,6 +2,8 @@ package com.leocardz.link.preview.library;
 
 import android.support.test.runner.AndroidJUnit4;
 
+import com.leocardz.link.preview.library.url.UrlExtractionStrategy;
+
 import org.jsoup.nodes.Document;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,6 +14,8 @@ import java.util.concurrent.CountDownLatch;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 /**
  * Instrumentation tests for TextCrawler.
@@ -32,6 +36,21 @@ public class TextCrawlerTest {
         assertTrue(callback.isNull);
     }
 
+    @Test
+    public void urlExtractedOutsideOfTextCrawlerDoesNotGoThroughUrlExtractionRoutine() throws Throwable {
+        final CountDownLatch signal = new CountDownLatch(1);
+        final TextCrawler textCrawler = new TextCrawler();
+
+        final TestLinkPreviewCallback callback = new TestLinkPreviewCallback(signal);
+        final UrlExtractionStrategy mockUrlExtractionStrategy = mock(UrlExtractionStrategy.class);
+        textCrawler.setUrlExtractionStrategy(mockUrlExtractionStrategy);
+        final String textPassedToTextCrawler = "this is some text that may or may not contain a URL";
+        textCrawler.makePreview(callback, textPassedToTextCrawler);
+        signal.await();
+
+        verify(mockUrlExtractionStrategy).extractUrls(textPassedToTextCrawler);
+    }
+
     /**
      * A TextCrawler that mimics a catastrophic failure in JSoup.
      */
@@ -39,7 +58,7 @@ public class TextCrawlerTest {
 
         @Override
         protected GetCode createPreviewGenerator(ImagePickingStrategy imagePickingStrategy) {
-            return new GetCode(imagePickingStrategy) {
+            return new GetCode(imagePickingStrategy, null) {
 
                 @Override
                 protected Document getDocument() throws IOException {

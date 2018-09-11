@@ -17,7 +17,7 @@ public class ProvidedDocumentTextCrawler extends TextCrawler {
 
     @Override
     protected GetCode createPreviewGenerator(ImagePickingStrategy imagePickingStrategy) {
-        return new GetCode(imagePickingStrategy) {
+        return new GetCode(imagePickingStrategy, null) {
 
             @Override
             protected Document getDocument() throws IOException {
