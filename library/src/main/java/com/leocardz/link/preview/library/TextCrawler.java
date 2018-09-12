@@ -359,46 +359,69 @@ public class TextCrawler {
 		return htmlDecode(result);
 	}
 
-	/**
-	 * Unshortens a short url
-	 */
-	private String unshortenUrl(String shortURL) {
-		if (!shortURL.startsWith(HTTP_PROTOCOL)
-				&& !shortURL.startsWith(HTTPS_PROTOCOL))
-			return "";
+    /**
+     * Unshortens a short url
+     */
+    private String unshortenUrl(final String originURL) {
+        if (!originURL.startsWith(HTTP_PROTOCOL)
+                && !originURL.startsWith(HTTPS_PROTOCOL))
+            return "";
 
-		URLConnection urlConn = connectURL(shortURL);
-		urlConn.getHeaderFields();
+        URLConnection urlConn = connectURL(originURL);
+        urlConn.getHeaderFields();
 
-		String finalResult = urlConn.getURL().toString();
+        final URL finalUrl = urlConn.getURL();
 
-		urlConn = connectURL(finalResult);
-		urlConn.getHeaderFields();
+        urlConn = connectURL(finalUrl);
+        urlConn.getHeaderFields();
 
-		shortURL = urlConn.getURL().toString();
+        final URL shortURL = urlConn.getURL();
 
-		while (!shortURL.equals(finalResult)) {
-			finalResult = unshortenUrl(finalResult);
-		}
+        String finalResult = shortURL.toString();
 
-		return finalResult;
-	}
+        while (!shortURL.sameFile(finalUrl)) {
+            boolean isEndlesslyRedirecting = false;
+            if (shortURL.getHost().equals(finalUrl.getHost())) {
+                if (shortURL.getPath().equals(finalUrl.getPath())) {
+                    isEndlesslyRedirecting = true;
+                }
+            }
+            if (isEndlesslyRedirecting) {
+                break;
+            } else {
+                finalResult = unshortenUrl(shortURL.toString());
+            }
+        }
 
-	/**
-	 * Takes a valid url and return a URL object representing the url address.
-	 */
-	private URLConnection connectURL(String strURL) {
-		URLConnection conn = null;
-		try {
-			URL inputURL = new URL(strURL);
-			conn = inputURL.openConnection();
-		} catch (MalformedURLException e) {
-			System.out.println("Please input a valid URL");
-		} catch (IOException ioe) {
-			System.out.println("Can not connect to the URL");
-		}
-		return conn;
-	}
+        return finalResult;
+    }
+
+    /**
+     * Takes a valid url string and returns a URLConnection object for the url.
+     */
+    private URLConnection connectURL(String strURL) {
+        URLConnection conn = null;
+        try {
+            URL inputURL = new URL(strURL);
+            conn = connectURL(inputURL);
+        } catch (MalformedURLException e) {
+            System.out.println("Please input a valid URL");
+        }
+        return conn;
+    }
+
+    /**
+     * Takes a valid url and returns a URLConnection object for the url.
+     */
+    private URLConnection connectURL(URL inputURL) {
+        URLConnection conn = null;
+        try {
+            conn = inputURL.openConnection();
+        } catch (IOException ioe) {
+            System.out.println("Can not connect to the URL");
+        }
+        return conn;
+    }
 
 	/** Removes extra spaces and trim the string */
 	public static String extendedTrim(String content) {

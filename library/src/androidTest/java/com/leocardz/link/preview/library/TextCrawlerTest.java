@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -49,6 +50,22 @@ public class TextCrawlerTest {
         signal.await();
 
         verify(mockUrlExtractionStrategy).extractUrls(textPassedToTextCrawler);
+    }
+
+    @Test
+    public void urlExhibitingInfiniteRedirectIssueCanBeProcessed() throws Throwable {
+        final CountDownLatch signal = new CountDownLatch(1);
+        final TextCrawler textCrawler = new TextCrawler();
+
+        final TestLinkPreviewCallback callback = new TestLinkPreviewCallback(signal);
+
+        textCrawler.makePreview(callback, "https://medium.muz.li/ui-design-tips-for-iphone-x-2652b2b248ce");
+        signal.await(5000, TimeUnit.MILLISECONDS);
+
+        final SourceContent sourceContent = callback.sourceContent;
+        assertNotNull(sourceContent);
+        assertTrue(sourceContent.isSuccess());
+        assertFalse(callback.isNull);
     }
 
     /**
