@@ -2,6 +2,9 @@ package com.leocardz.link.preview.library;
 
 import android.os.AsyncTask;
 
+import com.leocardz.link.preview.library.url.DefaultUrlExtractionStrategy;
+import com.leocardz.link.preview.library.url.UrlExtractionStrategy;
+
 import org.jsoup.Jsoup;
 import org.jsoup.UnsupportedMimeTypeException;
 import org.jsoup.nodes.Document;
@@ -10,7 +13,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -26,8 +28,10 @@ public class TextCrawler {
 
 	private AsyncTask getCodeTask;
 
-	public TextCrawler() {
-	}
+    private UrlExtractionStrategy urlExtractionStrategy;
+
+    public TextCrawler() {
+    }
 
     public void makePreview(LinkPreviewCallback callback, String url) {
         ImagePickingStrategy imagePickingStrategy = new DefaultImagePickingStrategy();
@@ -49,7 +53,7 @@ public class TextCrawler {
     }
 
     protected GetCode createPreviewGenerator(ImagePickingStrategy imagePickingStrategy) {
-        return new GetCode(imagePickingStrategy);
+        return new GetCode(imagePickingStrategy, urlExtractionStrategy);
     }
 
 	public void cancel(){
@@ -57,6 +61,10 @@ public class TextCrawler {
 			getCodeTask.cancel(true);
 		}
 	}
+
+    public void setUrlExtractionStrategy(UrlExtractionStrategy urlExtractionStrategy) {
+        this.urlExtractionStrategy = urlExtractionStrategy;
+    }
 
 
     /**
@@ -66,10 +74,14 @@ public class TextCrawler {
 
         private SourceContent sourceContent = new SourceContent();
         private final ImagePickingStrategy imagePickingStrategy;
-        private ArrayList<String> urls;
+        private final UrlExtractionStrategy urlExtractionStrategy;
 
-        GetCode(ImagePickingStrategy imagePickingStrategy) {
+        GetCode(ImagePickingStrategy imagePickingStrategy, UrlExtractionStrategy urlExtractionStrategy) {
             this.imagePickingStrategy = imagePickingStrategy;
+            if (urlExtractionStrategy == null) {
+                urlExtractionStrategy = new DefaultUrlExtractionStrategy();
+            }
+            this.urlExtractionStrategy = urlExtractionStrategy;
         }
 
         @Override
@@ -95,19 +107,18 @@ public class TextCrawler {
 
         @Override
         protected Void doInBackground(String... params) {
-            // Don't forget the http:// or https://
-            urls = SearchUrls.matches(params[0]);
+            final List<String> urlStrings = urlExtractionStrategy.extractUrls(params[0]);
+            String url;
+            if (urlStrings != null && !urlStrings.isEmpty()) {
+                url = unshortenUrl(urlStrings.get(0));
+            } else {
+                url = "";
+            }
 
-            if (urls.size() > 0)
-                sourceContent
-                        .setFinalUrl(unshortenUrl(extendedTrim(urls.get(0))));
-            else
-                sourceContent.setFinalUrl("");
-
+            sourceContent.setFinalUrl(url);
             boolean wasPreviewGenerationSuccessful = false;
-            if (!sourceContent.getFinalUrl().equals("")) {
-                if (isImage(sourceContent.getFinalUrl())
-                        && !sourceContent.getFinalUrl().contains("dropbox")) {
+            if (!url.equals("")) {
+                if (isImage(url) && !url.contains("dropbox")) {
                     setSourceContentForImage();
                     wasPreviewGenerationSuccessful = true;
                 } else {
@@ -232,30 +243,27 @@ public class TextCrawler {
 		return Jsoup.parse(content).text();
 	}
 
-	/** Crawls the code looking for relevant information */
-	private String crawlCode(String content) {
-		String result = "";
-		String resultSpan = "";
-		String resultParagraph = "";
-		String resultDiv = "";
+    /**
+     * Crawls the code looking for relevant information
+     */
+    private String crawlCode(String content) {
+        String resultSpan = getTagContent("span", content);
+        String resultParagraph = getTagContent("p", content);
+        String resultDiv = getTagContent("div", content);
 
-		resultSpan = getTagContent("span", content);
-		resultParagraph = getTagContent("p", content);
-		resultDiv = getTagContent("div", content);
+        String result;
 
-		result = resultSpan;
+        if (resultParagraph.length() > resultSpan.length()
+                && resultParagraph.length() >= resultDiv.length())
+            result = resultParagraph;
+        else if (resultParagraph.length() > resultSpan.length()
+                && resultParagraph.length() < resultDiv.length())
+            result = resultDiv;
+        else
+            result = resultParagraph;
 
-		if (resultParagraph.length() > resultSpan.length()
-				&& resultParagraph.length() >= resultDiv.length())
-			result = resultParagraph;
-		else if (resultParagraph.length() > resultSpan.length()
-				&& resultParagraph.length() < resultDiv.length())
-			result = resultDiv;
-		else
-			result = resultParagraph;
-
-		return htmlDecode(result);
-	}
+        return htmlDecode(result);
+    }
 
 	/** Returns the cannoncial url */
 	private String cannonicalPage(String url) {
@@ -351,46 +359,69 @@ public class TextCrawler {
 		return htmlDecode(result);
 	}
 
-	/**
-	 * Unshortens a short url
-	 */
-	private String unshortenUrl(String shortURL) {
-		if (!shortURL.startsWith(HTTP_PROTOCOL)
-				&& !shortURL.startsWith(HTTPS_PROTOCOL))
-			return "";
+    /**
+     * Unshortens a short url
+     */
+    private String unshortenUrl(final String originURL) {
+        if (!originURL.startsWith(HTTP_PROTOCOL)
+                && !originURL.startsWith(HTTPS_PROTOCOL))
+            return "";
 
-		URLConnection urlConn = connectURL(shortURL);
-		urlConn.getHeaderFields();
+        URLConnection urlConn = connectURL(originURL);
+        urlConn.getHeaderFields();
 
-		String finalResult = urlConn.getURL().toString();
+        final URL finalUrl = urlConn.getURL();
 
-		urlConn = connectURL(finalResult);
-		urlConn.getHeaderFields();
+        urlConn = connectURL(finalUrl);
+        urlConn.getHeaderFields();
 
-		shortURL = urlConn.getURL().toString();
+        final URL shortURL = urlConn.getURL();
 
-		while (!shortURL.equals(finalResult)) {
-			finalResult = unshortenUrl(finalResult);
-		}
+        String finalResult = shortURL.toString();
 
-		return finalResult;
-	}
+        while (!shortURL.sameFile(finalUrl)) {
+            boolean isEndlesslyRedirecting = false;
+            if (shortURL.getHost().equals(finalUrl.getHost())) {
+                if (shortURL.getPath().equals(finalUrl.getPath())) {
+                    isEndlesslyRedirecting = true;
+                }
+            }
+            if (isEndlesslyRedirecting) {
+                break;
+            } else {
+                finalResult = unshortenUrl(shortURL.toString());
+            }
+        }
 
-	/**
-	 * Takes a valid url and return a URL object representing the url address.
-	 */
-	private URLConnection connectURL(String strURL) {
-		URLConnection conn = null;
-		try {
-			URL inputURL = new URL(strURL);
-			conn = inputURL.openConnection();
-		} catch (MalformedURLException e) {
-			System.out.println("Please input a valid URL");
-		} catch (IOException ioe) {
-			System.out.println("Can not connect to the URL");
-		}
-		return conn;
-	}
+        return finalResult;
+    }
+
+    /**
+     * Takes a valid url string and returns a URLConnection object for the url.
+     */
+    private URLConnection connectURL(String strURL) {
+        URLConnection conn = null;
+        try {
+            URL inputURL = new URL(strURL);
+            conn = connectURL(inputURL);
+        } catch (MalformedURLException e) {
+            System.out.println("Please input a valid URL");
+        }
+        return conn;
+    }
+
+    /**
+     * Takes a valid url and returns a URLConnection object for the url.
+     */
+    private URLConnection connectURL(URL inputURL) {
+        URLConnection conn = null;
+        try {
+            conn = inputURL.openConnection();
+        } catch (IOException ioe) {
+            System.out.println("Can not connect to the URL");
+        }
+        return conn;
+    }
 
 	/** Removes extra spaces and trim the string */
 	public static String extendedTrim(String content) {
