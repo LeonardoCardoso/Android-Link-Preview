@@ -277,7 +277,7 @@ public class TextCrawler {
 
 		int urlLength = url.length();
 		for (int i = 0; i < urlLength; i++) {
-			if(getCodeTask.isCancelled()){
+			if (getCodeTask == null || getCodeTask.isCancelled()) {
 				break;
 			}
 			if (url.charAt(i) != '/')
