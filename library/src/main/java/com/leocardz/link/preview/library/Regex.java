@@ -28,7 +28,7 @@ public class Regex {
 			break;
 		}
 
-		return TextCrawler.extendedTrim(match);
+		return TextCrawler.Companion.extendedTrim(match);
 	}
 
 	public static List<String> pregMatchAll(String content, String pattern,
@@ -38,7 +38,7 @@ public class Regex {
 		Matcher matcher = Pattern.compile(pattern).matcher(content);
 
 		while (matcher.find()) {
-			matches.add(TextCrawler.extendedTrim(matcher.group(index)));
+			matches.add(TextCrawler.Companion.extendedTrim(matcher.group(index)));
 		}
 
 		return matches;
@@ -50,7 +50,7 @@ public class Regex {
 		Matcher matcher = Pattern.compile(pattern).matcher(content);
 
 		while (matcher.find()) {
-			matches.add(TextCrawler.extendedTrim(matcher.group(3))
+			matches.add(TextCrawler.Companion.extendedTrim(matcher.group(3))
 					+ matcher.group(4));
 		}
 
@@ -64,7 +64,7 @@ public class Regex {
 		Matcher matcher = Pattern.compile(pattern).matcher(content);
 
 		while (matcher.find()) {
-			matches.add(TextCrawler.extendedTrim(matcher.group(3))
+			matches.add(TextCrawler.Companion.extendedTrim(matcher.group(3))
 					+ matcher.group(4));
 		}
 

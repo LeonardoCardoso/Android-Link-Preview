@@ -13,7 +13,7 @@ public class DefaultUrlExtractionStrategy implements UrlExtractionStrategy {
         List<String> urls = SearchUrls.matches(textPassedToTextCrawler);
 
         if (urls.size() > 0) {
-            String url = TextCrawler.extendedTrim(urls.get(0));
+            String url = TextCrawler.Companion.extendedTrim(urls.get(0));
             urls.set(0, url);
         }
         return urls;

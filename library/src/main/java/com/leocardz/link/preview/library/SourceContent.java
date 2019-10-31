@@ -6,185 +6,175 @@ import java.util.List;
 
 public class SourceContent {
 
-	private boolean success = false;
-	private String htmlCode = "";
-	private String raw = "";
-	private String title = "";
-	private String description = "";
-	private String url = "";
-	private String finalUrl = "";
-	private String cannonicalUrl = "";
-	private HashMap<String, String> metaTags = new HashMap<String, String>();
+    private boolean success = false;
 
-	private List<String> images = new ArrayList<String>();
-	private String[] urlData = new String[2];
+    private String htmlCode = "";
+    private String raw = "";
+    private String title = "";
+    private String description = "";
+    private String url = "";
+    private String finalUrl = "";
+    private String canonicalUrl = "";
+    private HashMap<String, String> metaTags = new HashMap<>();
 
-	public SourceContent() {
-	}
+    private List<String> images = new ArrayList<>();
+    private String[] urlData = new String[2];
 
-	/**
-	 * @return the success
-	 */
-	public boolean isSuccess() {
-		return success;
-	}
+    public SourceContent() {
+    }
 
-	/**
-	 * @param success
-	 *            the success to set
-	 */
-	public void setSuccess(boolean success) {
-		this.success = success;
-	}
+    /**
+     * @return the success
+     */
+    public boolean isSuccess() {
+        return success;
+    }
 
-	/**
-	 * @return the htmlCode
-	 */
-	public String getHtmlCode() {
-		return htmlCode;
-	}
+    /**
+     * @param success the success to set
+     */
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
 
-	/**
-	 * @param htmlCode
-	 *            the htmlCode to set
-	 */
-	public void setHtmlCode(String htmlCode) {
-		this.htmlCode = htmlCode;
-	}
+    /**
+     * @return the htmlCode
+     */
+    public String getHtmlCode() {
+        return htmlCode;
+    }
 
-	/**
-	 * @return the raw
-	 */
-	public String getRaw() {
-		return raw;
-	}
+    /**
+     * @param htmlCode the htmlCode to set
+     */
+    public void setHtmlCode(String htmlCode) {
+        this.htmlCode = htmlCode;
+    }
 
-	/**
-	 * @param raw
-	 *            the raw to set
-	 */
-	public void setRaw(String raw) {
-		this.raw = raw;
-	}
+    /**
+     * @return the raw
+     */
+    public String getRaw() {
+        return raw;
+    }
 
-	/**
-	 * @return the title
-	 */
-	public String getTitle() {
-		return title;
-	}
+    /**
+     * @param raw the raw to set
+     */
+    public void setRaw(String raw) {
+        this.raw = raw;
+    }
 
-	/**
-	 * @param title
-	 *            the title to set
-	 */
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    /**
+     * @return the title
+     */
+    public String getTitle() {
+        return title;
+    }
 
-	/**
-	 * @return the description
-	 */
-	public String getDescription() {
-		return description;
-	}
+    /**
+     * @param title the title to set
+     */
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	/**
-	 * @param description
-	 *            the description to set
-	 */
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    /**
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
 
-	/**
-	 * @return the url
-	 */
-	public String getUrl() {
-		return url;
-	}
+    /**
+     * @param description the description to set
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	/**
-	 * @param url
-	 *            the url to set
-	 */
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    /**
+     * @return the url
+     */
+    public String getUrl() {
+        return url;
+    }
 
-	/**
-	 * @return the finalUrl
-	 */
-	public String getFinalUrl() {
-		return finalUrl;
-	}
+    /**
+     * @param url the url to set
+     */
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
-	/**
-	 * @param finalUrl
-	 *            the finalUrl to set
-	 */
-	public void setFinalUrl(String finalUrl) {
-		this.finalUrl = finalUrl;
-	}
+    /**
+     * @return the finalUrl
+     */
+    public String getFinalUrl() {
+        return finalUrl;
+    }
 
-	/**
-	 * @return the cannonicalUrl
-	 */
-	public String getCannonicalUrl() {
-		return cannonicalUrl;
-	}
+    /**
+     * @param finalUrl the finalUrl to set
+     */
+    public void setFinalUrl(String finalUrl) {
+        this.finalUrl = finalUrl;
+    }
 
-	/**
-	 * @param cannonicalUrl
-	 *            the cannonicalUrl to set
-	 */
-	public void setCannonicalUrl(String cannonicalUrl) {
-		this.cannonicalUrl = cannonicalUrl;
-	}
+    /**
+     * @return the canonicalUrl
+     */
+    public String getCanonicalUrl() {
+        return canonicalUrl;
+    }
 
-	/**
-	 * @return the metaTags
-	 */
-	public HashMap<String, String> getMetaTags() {
-		return metaTags;
-	}
+    /**
+     * @param canonicalUrl the canonicalUrl to set
+     */
+    public void setCanonicalUrl(String canonicalUrl) {
+        this.canonicalUrl = canonicalUrl;
+    }
 
-	/**
-	 * @param metaTags
-	 *            the metaTags to set
-	 */
-	public void setMetaTags(HashMap<String, String> metaTags) {
-		this.metaTags = metaTags;
-	}
+    /**
+     * @return the metaTags
+     */
+    public HashMap<String, String> getMetaTags() {
+        return metaTags;
+    }
 
-	/**
-	 * @return the images
-	 */
-	public List<String> getImages() {
-		return images;
-	}
+    /**
+     * @param metaTags the metaTags to set
+     */
+    public void setMetaTags(HashMap<String, String> metaTags) {
+        this.metaTags = metaTags;
+    }
 
-	/**
-	 * @param images
-	 *            the images to set
-	 */
-	public void setImages(List<String> images) {
-		this.images = images;
-	}
+    /**
+     * @return the images
+     */
+    public List<String> getImages() {
+        return images;
+    }
 
-	/**
-	 * @return the urlData
-	 */
-	public String[] getUrlData() {
-		return urlData;
-	}
+    /**
+     * @param images the images to set
+     */
+    public void setImages(List<String> images) {
+        this.images = images;
+    }
 
-	/**
-	 * @param urlData
-	 *            the urlData to set
-	 */
-	public void setUrlData(String[] urlData) {
-		this.urlData = urlData;
-	}
+    /**
+     * @return the urlData
+     */
+    public String[] getUrlData() {
+        return urlData;
+    }
+
+    /**
+     * @param urlData the urlData to set
+     */
+    public void setUrlData(String[] urlData) {
+        this.urlData = urlData;
+    }
 
 }

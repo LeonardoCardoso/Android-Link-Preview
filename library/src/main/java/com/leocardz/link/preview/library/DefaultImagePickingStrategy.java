@@ -1,7 +1,5 @@
 package com.leocardz.link.preview.library;
 
-import android.os.AsyncTask;
-
 import org.jsoup.nodes.Document;
 
 import java.util.HashMap;
@@ -13,16 +11,35 @@ import java.util.List;
  */
 class DefaultImagePickingStrategy extends BaseImagePickingStrategy {
 
+    private int imageQuantity;
+
+    public DefaultImagePickingStrategy() {
+        this(Companion.getQUANTITY_ALL());
+    }
+
+    public DefaultImagePickingStrategy(int imageQuantity) {
+        setImageQuantity(imageQuantity);
+    }
+
     /**
      * Gets images from the html code
      */
     @Override
-    public List<String> getImages(AsyncTask asyncTask, Document document, HashMap<String, String> metaTags) {
+    public List<String> getImages(GetSource getSource, Document document, HashMap<String, String> metaTags) {
         List<String> images = getMetaImage(metaTags);
-
         if (images.isEmpty()) {
-            images.addAll(getImagesFromImgTags(asyncTask, document));
+            images.addAll(getImagesFromImgTags(getSource, document));
         }
         return images;
+    }
+
+    @Override
+    public int getImageQuantity() {
+        return imageQuantity;
+    }
+
+    @Override
+    public void setImageQuantity(int i) {
+        imageQuantity = i;
     }
 }

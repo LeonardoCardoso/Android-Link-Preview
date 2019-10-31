@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.koushikdutta.urlimageviewhelper.UrlImageViewCallback;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
@@ -31,6 +32,11 @@ import com.leocardz.link.preview.library.TextCrawler;
 
 import java.util.List;
 import java.util.Random;
+
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 
 @SuppressWarnings("unused")
@@ -46,14 +52,15 @@ public class Main extends ActionBarActivity {
 
     private TextView previewAreaTitle, postAreaTitle;
 
-    private String currentTitle, currentUrl, currentCannonicalUrl,
-            currentDescription;
+    private String currentTitle, currentUrl, currentCannonicalUrl, currentDescription;
 
     private Bitmap[] currentImageSet;
     private Bitmap currentImage;
     private int currentItem = 0;
     private int countBigImages = 0;
     private boolean noThumb;
+
+    private Disposable linkPreviewDisposable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,7 +144,6 @@ public class Main extends ActionBarActivity {
      */
     private void initPostButton() {
         postButton.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 postAreaTitle.setVisibility(View.VISIBLE);
@@ -174,8 +180,7 @@ public class Main extends ActionBarActivity {
                 final TextView descriptionTextView = (TextView) content
                         .findViewById(R.id.description);
 
-                contentTextView.setText(TextCrawler.extendedTrim(editText
-                        .getText().toString()));
+                contentTextView.setText(TextCrawler.Companion.extendedTrim(editText.getText().toString()));
 
                 if (currentImage != null && !noThumb) {
                     imageView.setImageBitmap(currentImage);
@@ -194,7 +199,7 @@ public class Main extends ActionBarActivity {
                     descriptionTextView.setVisibility(View.GONE);
 
                 urlTextView.setText(currentCannonicalUrl);
-                
+
                 final String currentUrlLocal = currentUrl;
 
                 mainView.setOnClickListener(new OnClickListener() {
@@ -219,24 +224,48 @@ public class Main extends ActionBarActivity {
      */
     public void initSubmitButton() {
         submitButton.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View arg0) {
+                textCrawler.makePreview(editText.getText().toString())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Observer<SourceContent>() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
+                                linkPreviewDisposable = d;
+                                callback.onPre();
+                            }
 
-                textCrawler
-                        .makePreview(callback, editText.getText().toString());
-                // , TextCrawler.NONE);
+                            @Override
+                            public void onNext(SourceContent sourceContent) {
+                                try {
+                                    callback.onPos(sourceContent, !sourceContent.isSuccess());
+                                } catch (Exception e) {
+                                    onError(e);
+                                }
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onComplete() {
+                            }
+                        });
             }
         });
     }
 
-    /** Callback to update your view. Totally customizable. */
-    /** onPre() will be called before the crawling. onPos() after. */
     /**
+     * Callback to update your view. Totally customizable.
+     * onPre() will be called before the crawling. onPos() after.
      * You can customize this to update your view
      */
     private LinkPreviewCallback callback = new LinkPreviewCallback() {
-        /**
+
+        /*
          * This view is used to be updated or added in the layout after getting
          * the result
          */
@@ -356,7 +385,7 @@ public class Main extends ActionBarActivity {
                         titleTextView.setVisibility(View.GONE);
 
                         titleEditText.setText(TextCrawler
-                                .extendedTrim(titleTextView.getText()
+                                .Companion.extendedTrim(titleTextView.getText()
                                         .toString()));
                         titleEditText.setVisibility(View.VISIBLE);
                     }
@@ -372,7 +401,7 @@ public class Main extends ActionBarActivity {
                                     titleEditText.setVisibility(View.GONE);
 
                                     currentTitle = TextCrawler
-                                            .extendedTrim(titleEditText
+                                            .Companion.extendedTrim(titleEditText
                                                     .getText().toString());
 
                                     titleTextView.setText(currentTitle);
@@ -391,7 +420,7 @@ public class Main extends ActionBarActivity {
                         descriptionTextView.setVisibility(View.GONE);
 
                         descriptionEditText.setText(TextCrawler
-                                .extendedTrim(descriptionTextView.getText()
+                                .Companion.extendedTrim(descriptionTextView.getText()
                                         .toString()));
                         descriptionEditText.setVisibility(View.VISIBLE);
                     }
@@ -408,7 +437,7 @@ public class Main extends ActionBarActivity {
                                             .setVisibility(View.GONE);
 
                                     currentDescription = TextCrawler
-                                            .extendedTrim(descriptionEditText
+                                            .Companion.extendedTrim(descriptionEditText
                                                     .getText().toString());
 
                                     descriptionTextView
@@ -512,7 +541,7 @@ public class Main extends ActionBarActivity {
                             .setDescription(getString(R.string.enter_description));
 
                 titleTextView.setText(sourceContent.getTitle());
-                urlTextView.setText(sourceContent.getCannonicalUrl());
+                urlTextView.setText(sourceContent.getCanonicalUrl());
                 descriptionTextView.setText(sourceContent.getDescription());
 
                 postButton.setVisibility(View.VISIBLE);
@@ -521,7 +550,7 @@ public class Main extends ActionBarActivity {
             currentTitle = sourceContent.getTitle();
             currentDescription = sourceContent.getDescription();
             currentUrl = sourceContent.getUrl();
-            currentCannonicalUrl = sourceContent.getCannonicalUrl();
+            currentCannonicalUrl = sourceContent.getCanonicalUrl();
         }
     };
 
@@ -633,5 +662,11 @@ public class Main extends ActionBarActivity {
         postButton.setVisibility(View.GONE);
         previewAreaTitle.setVisibility(View.GONE);
         dropPreview.removeAllViews();
+    }
+
+    @Override
+    protected void onStop() {
+        if (!linkPreviewDisposable.isDisposed()) linkPreviewDisposable.dispose();
+        super.onStop();
     }
 }
