@@ -47,7 +47,7 @@ to your ProGuard rules file.
 ## Usage
 #### Instantiating 
 ```java
-import com.leocardz.link.preview.library.TextCrawler;
+import com.leocardz.linkpreview.sample.library.TextCrawler;
 // ...
 // Create an instance of the TextCrawler to parse your url into a preview.
 TextCrawler textCrawler = new TextCrawler();
