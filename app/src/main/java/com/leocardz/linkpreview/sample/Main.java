@@ -225,6 +225,17 @@ public class Main extends Activity {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
+                textCrawler.makePreview(new LinkPreviewCallback() {
+                    @Override
+                    public void onPre() {
+
+                    }
+
+                    @Override
+                    public void onPos(SourceContent sourceContent, boolean isNull) {
+
+                    }
+                }, "");
                 textCrawler.makePreview(editText.getText().toString())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())

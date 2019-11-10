@@ -23,10 +23,11 @@ android {
 }
 
 dependencies {
-    implementation 'org.jsoup:jsoup:1.11.3'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.12'
+    implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
+
+    implementation 'org.jsoup:jsoup:1.12.1'
 
     androidTestImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
