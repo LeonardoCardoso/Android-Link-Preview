@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion 29
 
     dexOptions {
         jumboMode = true
@@ -9,8 +9,8 @@ android {
 
     defaultConfig {
         applicationId "com.leocardz.link.preview"
-        minSdkVersion 11
-        targetSdkVersion 23
+        minSdkVersion 14
+        targetSdkVersion 29
         versionCode 1
         versionName "1.1"
     }
@@ -23,8 +23,12 @@ android {
 }
 
 dependencies {
-    implementation project(":library")
-    implementation 'com.android.support:appcompat-v7:23.1.1'
+    implementation project(':linkpreview')
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+
     implementation 'com.koushikdutta.urlimageviewhelper:urlimageviewhelper:1.0.4'
     implementation 'org.jsoup:jsoup:1.11.3'
+
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.12'
 }

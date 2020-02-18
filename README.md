@@ -47,7 +47,7 @@ to your ProGuard rules file.
 ## Usage
 #### Instantiating 
 ```java
-import com.leocardz.link.preview.library.TextCrawler;
+import com.leocardz.linkpreview.sample.library.TextCrawler;
 // ...
 // Create an instance of the TextCrawler to parse your url into a preview.
 TextCrawler textCrawler = new TextCrawler();
@@ -71,17 +71,66 @@ LinkPreviewCallback linkPreviewCallback = new LinkPreviewCallback() {
 
 #### Generate Preview
 ```java
-textCrawler.makePreview( linkPreviewCallback, url);
+// using AsyncTask
+
+textCrawler.makePreview(linkPreviewCallback, url);
 ```
+```java
+// using RxJava2
+// no need to implement LinkPreviewCallback
+
+textCrawler.makePreview(editText.getText().toString())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Observer<SourceContent>() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
+                                linkPreviewDisposable = d;
+                                linkPreviewCallback.onPre();
+                            }
+
+                            @Override
+                            public void onNext(SourceContent sourceContent) {
+                                try {
+                                    linkPreviewCallback.onPos(sourceContent, !sourceContent.isSuccess());
+                                } catch (Exception e) {
+                                    onError(e);
+                                }
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onComplete() {
+                            }
+                        });
+}
+```
+
 #### Cancel unfinished tasks when views are destroied.
 If you are using Android Link Preview inside of an Activity, it is important to cancel unfinished Preview activites at the end of the Activity's lifecycle.
 
 ```java
- @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        textCrawler.cancel();
-    }
+// using AsyncTask
+
+@Override
+protected void onDestroy() {
+    super.onDestroy();
+    textCrawler.cancel();
+}
+```
+
+```java
+// using RxJava2
+
+@Override
+protected void onStop() {
+    if (!linkPreviewDisposable.isDisposed()) linkPreviewDisposable.dispose();
+    super.onStop();
+}
 ```
 
 Apps using Android Link Preview
